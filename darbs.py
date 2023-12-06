@@ -1,59 +1,134 @@
-import tkinter as tk
-from tkinter import ttk
 import sqlite3
 
-def izveidot_sludinājumu():
+conn = sqlite3.connect("sludinajumi.db")
+cursor = conn.cursor()
 
-    marka = marka_entry.get()
-    modelis = modelis_entry.get()
-    tehniska_apskate = tehniska_apskate_entry.get()
-    sludinājums = sludinājums_entry.get()
+cursor.execute("""
+CREATE TABLE sludinajumi (
+  id INTEGER PRIMARY KEY,
+  kategorija TEXT,
+  marka TEXT,
+  modelis TEXT,
+  izlaiduma_gads TEXT,
+  motors TEXT,
+  motora_tilpums TEXT,
+  ātrumkārba TEXT,
+  nobraukums TEXT,
+  krāsa TEXT,
+  virsbūves_tips TEXT,
+  tehniskā_apskate TEXT,
+  cena TEXT,
+  īpašuma_veids TEXT,
+  pilsēta TEXT,
+  platība TEXT,
+  iela TEXT
+);
+""")
 
-    conn = sqlite3.connect('automasinas.db')
-    c = conn.cursor()
 
+def attelot_sludinajumus():
+  cursor.execute("SELECT * FROM sludinajumi")
+  sludinajumi = cursor.fetchall()
+  for sludinajums in sludinajumi:
+    print(sludinajums)
 
-    c.execute("INSERT INTO automasinas (Marka, Modelis, Tehniska_apskate, Sludinājums) VALUES (?, ?, ?, ?)",
-              (marka, modelis, tehniska_apskate, sludinājums))
+def izveidot_sludinajumu():
+  kategorija = input("Izvēlieties kategoriju: ")
+  if kategorija == "Automašīna":
+    marka = input("Marka: ")
+    modelis = input("Modelis: ")
+    izlaiduma_gads = input("Izlaiduma gads: ")
+    motors = input("Motors: ")
+    motora_tilpums = input("Motora tilpums: ")
+    ātrumkārba = input("Ātrumkārba: ")
+    nobraukums = input("Nobraukums: ")
+    krāsa = input("Krāsa: ")
+    virsbūves_tips = input("Virsbūves tips: ")
+    tehniskā_apskate = input("Tehniskā apskate: ")
+    cena = input("Cena: ")
+    cursor.execute("""
+      INSERT INTO sludinajumi (
+        kategorija,
+        marka,
+        modelis,
+        izlaiduma_gads,
+        motors,
+        motora_tilpums,
+        ātrumkārba,
+        nobraukums,
+        krāsa,
+        virsbūves_tips,
+        tehniskā_apskate,
+        cena
+      ) VALUES (
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+      );
+    """, (kategorija, marka, modelis, izlaiduma_gads, motors, motora_tilpums, ātrumkārba, nobraukums, krāsa, virsbūves_tips, tehniskā_apskate, cena))
     conn.commit()
+  elif kategorija == "Privātais īpašums":
+    īpašuma_veids = input("Īpašuma veids: ")
+    pilsēta = input("Pilsēta: ")
+    rajons = input("Rajons: ")
+    platība = input("Platība: ")
+    iela = input("Iela: ")
+    cena = input("Cena: ")
+    cursor.execute("""
+      INSERT INTO sludinajumi (
+        kategorija,
+        īpašuma_veids,
+        pilsēta,
+        rajons,
+        platība,
+        iela,
+        cena
+      ) VALUES (
+        ?, ?, ?, ?, ?, ?, ?
+      );
+    """, (kategorija, īpašuma_veids, pilsēta, rajons, platība, iela, cena))
 
+def parbaudit_laucinus():
+  kategorija = input("Izvēlieties kategoriju: ")
+  if kategorija == "Automašīna":
+    marka = input("Marka: ")
+    modelis = input("Modelis: ")
+    izlaiduma_gads = input("Izlaiduma gads: ")
+    motors = input("Motors: ")
+    motora_tilpums = input("Motora tilpums: ")
+    ātrumkārba = input("Ātrumkārba: ")
+    nobraukums = input("Nobraukums: ")
+    krāsa = input("Krāsa: ")
+    virsbūves_tips = input("Virsbūves tips: ")
+    tehniskā_apskate = input("Tehniskā apskate: ")
+    cena = input("Cena: ")
+    if marka == "" or modelis == "" or izlaiduma_gads == "" or motora_tilpums == "" or nobraukums == "" or krāsa == "" or virsbūves_tips == "" or tehniskā_apskate == "" or cena == "":
+      return False
+    else:
+      return True
+  elif kategorija == "Privātais īpašums":
+    īpašuma_veids = input("Īpašuma veids: ")
+    pilsēta = input("Pilsēta: ")
+    rajons = input("Rajons: ")
+    platība = input("Platība: ")
+    iela = input("Iela: ")
+    cena = input("Cena: ")
+    if īpašuma_veids == "" or pilsēta == "" or rajons == "" or platība == "" or cena == "":
+      return False
+    else:
+      return True
 
-    marka_entry.delete(0, tk.END)
-    modelis_entry.delete(0, tk.END)
-    tehniska_apskate_entry.delete(0, tk.END)
-    sludinājums_entry.delete(0, tk.END)
+def main():
+  attelot_sludinajumus()
+  while True:
+    izvēlne = input("Izvēlieties darbību: ")
+    if izvēlne == "1":
+      if parbaudit_laucinus():
+        izveidot_sludinajumu()
+      else:
+        print("Ne visi lauciņi ir aizpildīti!")
+    elif izvēlne == "2":
+      break
+    else:
+      print("Nepareiza darbība!")
 
-
-    conn.close()
-
-
-window = tk.Tk()
-window.title('Automašīnu sludinājumu pārvaldība')
-
-frame = ttk.Frame(window, padding="10")
-frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
-
-marka_label = ttk.Label(frame, text="Marka:")
-marka_label.grid(row=0, column=0, sticky=tk.W)
-marka_entry = ttk.Entry(frame, width=20)
-marka_entry.grid(row=0, column=1)
-
-modelis_label = ttk.Label(frame, text="Modelis:")
-modelis_label.grid(row=1, column=0, sticky=tk.W)
-modelis_entry = ttk.Entry(frame, width=20)
-modelis_entry.grid(row=1, column=1)
-
-tehniska_apskate_label = ttk.Label(frame, text="Tehniska apskate:")
-tehniska_apskate_label.grid(row=2, column=0, sticky=tk.W)
-tehniska_apskate_entry = ttk.Entry(frame, width=20)
-tehniska_apskate_entry.grid(row=2, column=1)
-
-sludinājums_label = ttk.Label(frame, text="Sludinājums:")
-sludinājums_label.grid(row=3, column=0, sticky=tk.W)
-sludinājums_entry = ttk.Entry(frame, width=20)
-sludinājums_entry.grid(row=3, column=1)
-
-submit_button = ttk.Button(frame, text="Izveidot sludinājumu", command=izveidot_sludinājumu)
-submit_button.grid(row=4, column=0, columnspan=2)
-
-window.mainloop()
+if __name__ == "__main__":
+  main()
