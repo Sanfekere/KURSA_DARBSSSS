@@ -1,134 +1,220 @@
+import tkinter as tk
+from tkinter import messagebox
 import sqlite3
 
-conn = sqlite3.connect("sludinajumi.db")
-cursor = conn.cursor()
+def create_table():
+    try:
+        conn = sqlite3.connect('ads.db')
+        c = conn.cursor()
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS sludinājumi (
+                id INTEGER PRIMARY KEY,
+                kategorija TEXT,
+                marka TEXT,
+                modelis TEXT,
+                izlaiduma_gads TEXT,
+                motors TEXT,
+                motora_tilpums TEXT,
+                ātrumskārba TEXT,
+                nobraukums TEXT,
+                krāsa TEXT,
+                virsbūves_tips TEXT,
+                tehniskā_apskate TEXT,
+                cena TEXT,
+                apraksts TEXT,
+                datums TEXT
+            )
+        ''')
+        conn.commit()
+        conn.close()
+    except sqlite3.Error as e:
+        print(f"Error creating table: {e}")
 
-cursor.execute("""
-CREATE TABLE sludinajumi (
-  id INTEGER PRIMARY KEY,
-  kategorija TEXT,
-  marka TEXT,
-  modelis TEXT,
-  izlaiduma_gads TEXT,
-  motors TEXT,
-  motora_tilpums TEXT,
-  ātrumkārba TEXT,
-  nobraukums TEXT,
-  krāsa TEXT,
-  virsbūves_tips TEXT,
-  tehniskā_apskate TEXT,
-  cena TEXT,
-  īpašuma_veids TEXT,
-  pilsēta TEXT,
-  platība TEXT,
-  iela TEXT
-);
-""")
+create_table()
+
+create_button = None
+def create_ad():
+    open_create_ad_window()
 
 
-def attelot_sludinajumus():
-  cursor.execute("SELECT * FROM sludinajumi")
-  sludinajumi = cursor.fetchall()
-  for sludinajums in sludinajumi:
-    print(sludinajums)
+def open_create_ad_window():
+    new_window = tk.Toplevel(root)
+    new_window.title("Izveidot sludinājumu")
 
-def izveidot_sludinajumu():
-  kategorija = input("Izvēlieties kategoriju: ")
-  if kategorija == "Automašīna":
-    marka = input("Marka: ")
-    modelis = input("Modelis: ")
-    izlaiduma_gads = input("Izlaiduma gads: ")
-    motors = input("Motors: ")
-    motora_tilpums = input("Motora tilpums: ")
-    ātrumkārba = input("Ātrumkārba: ")
-    nobraukums = input("Nobraukums: ")
-    krāsa = input("Krāsa: ")
-    virsbūves_tips = input("Virsbūves tips: ")
-    tehniskā_apskate = input("Tehniskā apskate: ")
-    cena = input("Cena: ")
-    cursor.execute("""
-      INSERT INTO sludinajumi (
-        kategorija,
-        marka,
-        modelis,
-        izlaiduma_gads,
-        motors,
-        motora_tilpums,
-        ātrumkārba,
-        nobraukums,
-        krāsa,
-        virsbūves_tips,
-        tehniskā_apskate,
-        cena
-      ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-      );
-    """, (kategorija, marka, modelis, izlaiduma_gads, motors, motora_tilpums, ātrumkārba, nobraukums, krāsa, virsbūves_tips, tehniskā_apskate, cena))
-    conn.commit()
-  elif kategorija == "Privātais īpašums":
-    īpašuma_veids = input("Īpašuma veids: ")
-    pilsēta = input("Pilsēta: ")
-    rajons = input("Rajons: ")
-    platība = input("Platība: ")
-    iela = input("Iela: ")
-    cena = input("Cena: ")
-    cursor.execute("""
-      INSERT INTO sludinajumi (
-        kategorija,
-        īpašuma_veids,
-        pilsēta,
-        rajons,
-        platība,
-        iela,
-        cena
-      ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?
-      );
-    """, (kategorija, īpašuma_veids, pilsēta, rajons, platība, iela, cena))
+    kategorija_var = tk.StringVar(new_window, "Automašīna")
+    kategorija_options = ["Automašīna", "Privātais īpašums"]
+    kategorija_dropdown = tk.OptionMenu(new_window,kategorija_var, *kategorija_options)
+    kategorija_dropdown.pack()
 
-def parbaudit_laucinus():
-  kategorija = input("Izvēlieties kategoriju: ")
-  if kategorija == "Automašīna":
-    marka = input("Marka: ")
-    modelis = input("Modelis: ")
-    izlaiduma_gads = input("Izlaiduma gads: ")
-    motors = input("Motors: ")
-    motora_tilpums = input("Motora tilpums: ")
-    ātrumkārba = input("Ātrumkārba: ")
-    nobraukums = input("Nobraukums: ")
-    krāsa = input("Krāsa: ")
-    virsbūves_tips = input("Virsbūves tips: ")
-    tehniskā_apskate = input("Tehniskā apskate: ")
-    cena = input("Cena: ")
-    if marka == "" or modelis == "" or izlaiduma_gads == "" or motora_tilpums == "" or nobraukums == "" or krāsa == "" or virsbūves_tips == "" or tehniskā_apskate == "" or cena == "":
-      return False
-    else:
-      return True
-  elif kategorija == "Privātais īpašums":
-    īpašuma_veids = input("Īpašuma veids: ")
-    pilsēta = input("Pilsēta: ")
-    rajons = input("Rajons: ")
-    platība = input("Platība: ")
-    iela = input("Iela: ")
-    cena = input("Cena: ")
-    if īpašuma_veids == "" or pilsēta == "" or rajons == "" or platība == "" or cena == "":
-      return False
-    else:
-      return True
+    marka_label = tk.Label(new_window, text="Marka:")
+    marka_label.pack()
 
-def main():
-  attelot_sludinajumus()
-  while True:
-    izvēlne = input("Izvēlieties darbību: ")
-    if izvēlne == "1":
-      if parbaudit_laucinus():
-        izveidot_sludinajumu()
-      else:
-        print("Ne visi lauciņi ir aizpildīti!")
-    elif izvēlne == "2":
-      break
-    else:
-      print("Nepareiza darbība!")
+    marka_entry = tk.Entry(new_window)
+    marka_entry.pack()
 
-if __name__ == "__main__":
-  main()
+    modelis_label = tk.Label(new_window, text="Modelis:")
+    modelis_label.pack()
+
+    modelis_entry = tk.Entry(new_window)
+    modelis_entry.pack()
+
+    izlaiduma_gads_label = tk.Label(new_window, text="Izlaiduma gads:")
+    izlaiduma_gads_label.pack()
+
+    izlaiduma_gads_entry = tk.Entry(new_window)
+    izlaiduma_gads_entry.pack()
+
+    motors_label = tk.Label(new_window, text="Motors:")
+    motors_label.pack()
+    motors_var = tk.StringVar(new_window, "None")
+    motors_options = ["hybrid", "dīzelis", "benzīns", "elektromašīna"]
+    motors_dropdown = tk.OptionMenu(new_window,motors_var, *motors_options)
+    motors_dropdown.pack()
+
+    motora_tilpums_label = tk.Label(new_window, text="Motora tilpums:")
+    motora_tilpums_label.pack()
+
+    motora_tilpums_entry = tk.Entry(new_window)
+    motora_tilpums_entry.pack()
+
+    atrumskarba_label = tk.Label(new_window, text="Ātrumskārba:")
+    atrumskarba_label.pack()
+
+    atrumkarba_var = tk.StringVar(new_window, "None")
+    atrumkarba_options = ["automāts", "maunuālais"]
+    atrumkarba_dropdown = tk.OptionMenu(new_window,atrumkarba_var, *atrumkarba_options)
+    atrumkarba_dropdown.pack()
+
+    nobraukums_label = tk.Label(new_window, text="Nobraukums km:")
+    nobraukums_label.pack()
+
+    nobraukums_entry = tk.Entry(new_window)
+    nobraukums_entry.pack()
+
+    krasa_label = tk.Label(new_window, text="Krāsa:")
+    krasa_label.pack()
+
+    krasa_entry = tk.Entry(new_window)
+    krasa_entry.pack()
+
+    virsbuves_tips_label = tk.Label(new_window, text="Virsbūves tips:")
+    virsbuves_tips_label.pack()
+    virsbuves_tips_var = tk.StringVar(new_window, "None")
+    virsbuves_tips_options = ["Kupeja", "Universāls", "Sedans", "Pikaps"]
+    virsbuves_tips_dropdown = tk.OptionMenu(new_window,virsbuves_tips_var, *virsbuves_tips_options)
+    virsbuves_tips_dropdown.pack()
+
+    tehniska_apskate_label = tk.Label(new_window, text="Tehniskā apskate:")
+    tehniska_apskate_label.pack()
+
+    tehniska_apskate_entry = tk.Entry(new_window)
+    tehniska_apskate_entry.pack()
+
+    cena_label = tk.Label(new_window, text="Cena EUR:")
+    cena_label.pack()
+
+    cena_entry = tk.Entry(new_window)
+    cena_entry.pack()
+
+    apraksts_label = tk.Label(new_window, text="Apraksts:")
+    apraksts_label.pack()
+
+    apraksts_entry = tk.Text(new_window, height=5, width=30)
+    apraksts_entry.pack()
+
+    save_button = tk.Button(new_window, text="Saglabāt", command=lambda: save_ad(
+        kategorija_var.get(), marka_entry.get(), modelis_entry.get(), izlaiduma_gads_entry.get(),
+        motors_var.get(), motora_tilpums_entry.get(), atrumkarba_var.get(),
+        nobraukums_entry.get(), krasa_entry.get(), virsbuves_tips_var.get(),
+        tehniska_apskate_entry.get(), cena_entry.get(), apraksts_entry.get("1.0", tk.END)
+    ))
+    save_button.pack()
+def save_ad(kategorija, marka, modelis, izlaiduma_gads, motors, motora_tilpums, atrumkarba,
+            nobraukums, krasa, virsbuves_tips, tehniska_apskate, cena, apraksts):
+    if not all([kategorija, marka, modelis, izlaiduma_gads, motors, motora_tilpums,
+                atrumkarba, nobraukums, krasa, virsbuves_tips, tehniska_apskate, cena]):
+        messagebox.showerror("Kļūda", "Visi lauki ir jāaizpilda!")
+        return
+
+    try:
+        conn = sqlite3.connect('ads.db')
+        c = conn.cursor()
+        c.execute('''
+            INSERT INTO sludinājumi (
+                kategorija, marka, modelis, izlaiduma_gads, motors, motora_tilpums, ātrumskārba,
+                nobraukums, krāsa, virsbūves_tips, tehniskā_apskate, cena, apraksts, datums
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+        ''', (kategorija, marka, modelis, izlaiduma_gads, motors, motora_tilpums, atrumkarba,
+              nobraukums, krasa, virsbuves_tips, tehniska_apskate, cena, apraksts))
+        conn.commit()
+        conn.close()
+
+        update_ads()
+    except sqlite3.Error as e:
+        messagebox.showerror("Kļūda", f"Datubāzes kļūda: {e}")
+
+def update_ads():
+    global create_button
+
+    for widget in root.winfo_children():
+        if isinstance(widget, tk.Button):
+            widget.destroy()
+
+    if create_button:
+        create_button = tk.Button(root, text="Izveidot sludinājumu", command=create_ad)
+        create_button.pack()
+
+    conn = sqlite3.connect('ads.db')
+    c = conn.cursor()
+    ads = c.execute("SELECT * FROM sludinājumi").fetchall()
+    conn.close()
+
+    for ad in ads:
+        ad_button = tk.Button(root, text=f"{ad[1]} {ad[2]}", command=lambda ad=ad: show_ad(ad))
+        ad_button.pack()
+
+
+def delete_ad(ad_id):
+    try:
+        conn = sqlite3.connect('ads.db')
+        c = conn.cursor()
+        c.execute("DELETE FROM sludinājumi WHERE id=?", (ad_id,))
+        conn.commit()
+        conn.close()
+
+        messagebox.showinfo("Izdzēsts", "Sludinājums ir izdzēsts veiksmīgi!")
+        update_ads()
+    except sqlite3.Error as e:
+        messagebox.showerror("Kļūda", f"Datubāzes kļūda: {e}")
+
+
+def show_ad(ad):
+    ad_window = tk.Toplevel(root)
+    ad_window.title("Sludinājuma informācija")
+
+    info_text = f"Kategorija: {ad[1]}\nMarka: {ad[2]}\nModelis: {ad[3]}\nIzlaiduma gads: {ad[4]}\nMotors: {ad[5]}\nMotora tilpums: {ad[6]}\nĀtrumkārba: {ad[7]}\nNobraukums: {ad[8]}\nKrāsa: {ad[9]}\nVirsbūves tips: {ad[10]}\nTehniskā apskate: {ad[11]}\nCena: {ad[12]}\n"
+
+    if len(ad) > 13 and ad[13]:
+        info_text += f"Apraksts: {ad[13]}\n"
+
+    info_text += f"Datums: {ad[14]}"
+
+    delete_button = tk.Button(ad_window, text="Dzēst sludinājumu", command=lambda: delete_ad(ad[0]))
+    delete_button.pack()
+
+    info_label = tk.Label(ad_window, text=info_text)
+    info_label.pack()
+
+
+
+root = tk.Tk()
+root.title("Sludinājumi")
+
+create_button = tk.Button(root, text="Izveidot sludinājumu", command=create_ad)
+create_button.pack()
+
+update_ads()
+create_table()
+
+root.mainloop()
