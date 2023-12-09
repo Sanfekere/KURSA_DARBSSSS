@@ -236,8 +236,8 @@ def edit_ad(ad_id):
     motora_tilpums_entry.insert(0, selected_ad[6])
     motora_tilpums_entry.pack()
 
-    atrumskarba_label = tk.Label(edit_window, text="Ātrumskārba:")
-    atrumskarba_label.pack()
+    atrumkarba_label = tk.Label(edit_window, text="Ātrumkārba:")
+    atrumkarba_label.pack()
 
     atrumkarba_var = tk.StringVar(edit_window, selected_ad[7])
     atrumkarba_options = ["automāts", "maunuālais"]
