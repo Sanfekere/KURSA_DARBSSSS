@@ -1,1 +1,3 @@
-
+Atrumkarba, motors, virsbuves_tips paliek None ja tos neizvēlas, izlabo tā, ja kaut vienā paliek None, tad ir kļuda, ir jaizvēlas kaut kas
+Tehniskajā, Cenā, Izlaiduma gadā - var rakstīt burtus, izlabo tā, lai var rakstīt tikai ciparus
+Markā var rakstīt ciparus, izlabo tā, lai var rakstīt tikai burtus
