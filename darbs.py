@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 import sqlite3
+import re
 
 def create_table():
     try:
@@ -142,6 +143,38 @@ def save_ad(kategorija, marka, modelis, izlaiduma_gads, motors, motora_tilpums, 
         messagebox.showerror("Kļūda", "Visi lauki ir jāaizpilda!")
         return
 
+    if not all([c.isalpha() or c.isspace() for c in marka]):
+        messagebox.showerror("Kļūda", "Marka var saturēt tikai burtus!")
+        return
+
+    if not re.match(r'^\d{4}$', izlaiduma_gads):
+        messagebox.showerror("Kļūda", "Izlaiduma gadam jābūt četrus ciparus saturīgam!")
+        return
+
+    if motors == "None" or atrumkarba == "None" or virsbuves_tips == "None":
+        messagebox.showerror("Kļūda", "Lūdzu, aizpildiet visus izvēles laukus!")
+        return
+
+    if not re.match(r'^\d{2}-\d{4}$', tehniska_apskate):
+        messagebox.showerror("Kļūda", "Tehniskā apskate jābūt formātā MM-GGGG!")
+        return
+
+    if not cena.isdigit():
+        messagebox.showerror("Kļūda", "Cenai jāsatur tikai cipari!")
+        return
+
+    if not re.match(r'^\d+\.\d+$', motora_tilpums):
+        messagebox.showerror("Kļūda", "Motora tilpumam jābūt formātā X.X!")
+        return
+
+    if not nobraukums.isdigit():
+        messagebox.showerror("Kļūda", "Nobraukumam jāsatur tikai cipari!")
+        return
+
+    if not all([c.isalpha() or c.isspace() for c in krasa]):
+        messagebox.showerror("Kļūda", "Krāsa var saturēt tikai burtus!")
+        return
+
     try:
         conn = sqlite3.connect('ads.db')
         c = conn.cursor()
@@ -166,6 +199,39 @@ def save_edit(ad_id, kategorija, marka, modelis, izlaiduma_gads, motors, motora_
     if not all([kategorija, marka, modelis, izlaiduma_gads, motors, motora_tilpums,
                 atrumkarba, nobraukums, krasa, virsbuves_tips, tehniska_apskate, cena]):
         messagebox.showerror("Kļūda", "Visi lauki ir jāaizpilda!")
+        return
+    if not all([c.isalpha() or c.isspace() for c in marka]):
+        messagebox.showerror("Kļūda", "Marka var saturēt tikai burtus!")
+        return
+
+
+
+    if not re.match(r'^\d{4}$', izlaiduma_gads):
+        messagebox.showerror("Kļūda", "Izlaiduma gadam jābūt četrus ciparus saturīgam!")
+        return
+
+    if motors == "None" or atrumkarba == "None" or virsbuves_tips == "None":
+        messagebox.showerror("Kļūda", "Lūdzu, aizpildiet visus izvēles laukus!")
+        return
+
+    if not re.match(r'^\d{2}-\d{4}$', tehniska_apskate):
+        messagebox.showerror("Kļūda", "Tehniskā apskate jābūt formātā MM-GGGG!")
+        return
+
+    if not cena.isdigit():
+        messagebox.showerror("Kļūda", "Cenai jāsatur tikai cipari!")
+        return
+
+    if not re.match(r'^\d+\.\d+$', motora_tilpums):
+        messagebox.showerror("Kļūda", "Motora tilpumam jābūt formātā X.X!")
+        return
+
+    if not nobraukums.isdigit():
+        messagebox.showerror("Kļūda", "Nobraukumam jāsatur tikai cipari!")
+        return
+
+    if not all([c.isalpha() or c.isspace() for c in krasa]):
+        messagebox.showerror("Kļūda", "Krāsa var saturēt tikai burtus!")
         return
 
     try:
