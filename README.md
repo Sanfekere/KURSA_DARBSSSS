@@ -50,5 +50,39 @@ Lietojumprogramma veic datu validāciju un informē lietotāju par iespējamām 
 ### Izvadīšana
 Programma attēlo sludinājumu sarakstu un detalizētu informāciju par sludinājumu atsevišķā logā.
 
+
+
+### Ievades dati:
+1. **Sludinājuma informācija:**
+    - Marka (Teksta ievades lauks)
+    - Modelis (Teksta ievades lauks)
+    - Izlaiduma gads (Ievades lauks ar četrām ciparu vērtību)
+    - Motors (Izvēles nolaižamais saraksts)
+    - Motora tilpums (Ievades lauks ar decimālo vērtību)
+    - Ātrumkārba (Izvēles nolaižamais saraksts)
+    - Nobraukums (Ievades lauks ar ciparu vērtību)
+    - Krāsa (Teksta ievades lauks)
+    - Virsbūves tips (Izvēles nolaižamais saraksts)
+    - Tehniskā apskate (Ievades lauks ar datuma formātu MM-GGGG)
+    - Cena EUR (Ievades lauks ar ciparu vērtību)
+    - Apraksts (Teksta lauks vai teksta ievades lauks)
+
+### Izvades dati:
+1. **Informācija par saglabātu sludinājumu:**
+    - Sludinājuma ID (unikāls identifikators)
+    - Marka
+    - Modelis
+    - Izlaiduma gads
+    - Motors
+    - Motora tilpums
+    - Ātrumkārba
+    - Nobraukums
+    - Krāsa
+    - Virsbūves tips
+    - Tehniskā apskate
+    - Cena EUR
+    - Apraksts
+    - Datums un laiks saglabāšanas brīdī
+
 ### Autors
 - Izstrādātājs: OLEGS NEČIPARENKO
