@@ -136,6 +136,7 @@ def open_create_ad_window():
         tehniska_apskate_entry.get(), cena_entry.get(), apraksts_entry.get("1.0", tk.END)
     ))
     save_button.pack()
+    
 def save_ad(kategorija, marka, modelis, izlaiduma_gads, motors, motora_tilpums, atrumkarba,
             nobraukums, krasa, virsbuves_tips, tehniska_apskate, cena, apraksts):
     if not all([kategorija, marka, modelis, izlaiduma_gads, motors, motora_tilpums,
